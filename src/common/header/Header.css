@@ -1,0 +1,40 @@
+
+.app-header {
+background-color:#222;
+height:36px;
+padding: 8px 8px 16px 32px;
+}
+.app-logo {
+    height:35px;
+    background-color: #ff7f7f;
+    float: left;
+    animation: rotation 8s infinite linear;
+    -webkit-animation: rotation 8s infinite linear;
+    
+}
+
+.invalidlogin {
+    color:red;
+}
+
+.loginModal {
+    outline:0;
+    top:50%;
+    left: -50%;
+    position: relative;
+}
+
+
+@keyframes rotation {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+}
+
+.login-button {
+    float: right;
+}
+
+.book-show-button {
+    float:right;
+    padding-right: 10px;
+}
