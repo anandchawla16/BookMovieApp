@@ -7,7 +7,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import logo from '../../assets/logo.svg';
 import FormControl from '@material-ui/core/FormControl';
@@ -21,12 +20,13 @@ import './Header.css';
 function getModalStyle() {
   
   return {
-    top: '65%',
+    top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
-    
-    height:'100%',
-    display:'block'
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
+
   };
 }
 
@@ -43,7 +43,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography component={'div'}>{children}</Typography>
+          <Typography component={'div'} style={{ padding: 0, textAlign: 'center' }}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -87,9 +87,35 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
   const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
+  
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [loggedin, setLoggedin] = React.useState(false);
+
+  //classes state for Login
+  const [usernameRequire,setUsersnameRequire] = React.useState("dispNone")
+  const [passwordRequire,setPasswordRequire] = React.useState("dispNone")
+
+  //states for Login
+  const[username,setUsername] = React.useState("");
+  const[password,setPassword] = React.useState("");
+  const[invalidlogin,setInvalidLogin] = React.useState("");
+
+  //states of Registration
+ const[firstname,setFirstName] = React.useState("")
+ const[lastname,setLastName] = React.useState("")
+ const[email,setEmail] = React.useState("")
+ const[registerpassword,setRegisterPassword] = React.useState("")
+ const[contact,setContact] = React.useState("")
+
+//classes states of Registration
+const[firstnameRequired,setFirstnameRequired] = React.useState("dispNone")
+const[lastnameRequired,setLastnameRequired] = React.useState("dispNone")
+const[emailRequired,setEmailRequired] = React.useState("dispNone")
+const[registerPasswordRequired,setRegisterPasswordRequired] = React.useState("dispNone")
+const[contactRequired,setContactRequired] = React.useState("dispNone")
+
+const[registrationSuccess,setRegistrationSucess]  = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -107,20 +133,11 @@ export default function Header() {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
+  // const handleChangeIndex = (index) => {
+  //   setValue(index);
+  // };
 
-const [loggedin, setLoggedin] = React.useState(false);
-//   const [inputs, setInputs] = useState({
-//     username: '',
-//     password: ''
-// });
-
-  const[username,setUsername] = React.useState("");
-  const[password,setPassword] = React.useState("");
-  const[invalidlogin,setInvalidLogin] = React.useState("");
-
+  //Handlers for Login
  const inputUsernameChangeHandler = (e) => {
       setUsername(e.target.value);
       //console.log(username);
@@ -133,9 +150,32 @@ const inputPasswordChangeHandler = (e) => {
   
 }
 
+//Handlers for Registration
+
+const inputFirstNameChangeHandler = (e) => {
+  setFirstName(e.target.value)
+}
+
+const inputLastNameChangeHandler = (e) => {
+  setLastName(e.target.value)
+}
+
+const inputEmailChangeHandler = (e) => {
+  setEmail(e.target.value)
+}
+
+const inputRegisterPasswordChangeHandler = (e) => {
+  setRegisterPassword(e.target.value)
+}
+
+const inputContactChangeHandler = (e) => {
+  setContact(e.target.value)
+}
+
 const loginClickHandler = async() => {
     console.log(window.btoa(username + ":" + password))
-    
+    username === "" ? setUsersnameRequire("dispBlock") : setUsersnameRequire("dispNone");
+    password === "" ? setPasswordRequire("dispBlock") : setPasswordRequire("dispNone")
     
 const requestOptions = {
   method: 'POST',
@@ -148,14 +188,17 @@ const requestOptions = {
 
 try {
 
-
 const rawResponse = await fetch('http://localhost:8085/api/v1/auth/login', requestOptions)
-console.log(window.btoa({username:password}))
+//console.log(window.btoa({username:password}))
 
 const result = await rawResponse.json();
         if(rawResponse.ok) {
-          console.log(result);
+          //console.log(JSON.stringify(result));
+
           setLoggedin(true);
+          sessionStorage.setItem("uuid", JSON.stringify(result["id"]));
+          sessionStorage.setItem("access-token", rawResponse.headers.get('access-token'));
+          //console.log(JSON.stringify(result["id"]) + " " + rawResponse.headers.get('access-token'))
           setUsername("")
           setPassword("")
           handleClose();
@@ -164,12 +207,66 @@ const result = await rawResponse.json();
         else {
           const error = new Error();
           error.message = result.message || 'Something went wrong.';
-            setInvalidLogin("Invalid username of password")
+            setInvalidLogin("Invalid username or password")
         }
 
 } catch(e) {
   alert(`Error: ${e.message}`);
 }
+}
+
+const logoutClickHandler = () => {
+        sessionStorage.removeItem("uuid");
+        sessionStorage.removeItem("access-token");
+
+        setLoggedin(false);
+}
+
+const registerClickHandler =async () => {
+  //alert("Registration Clicked")
+
+  firstname === "" ? setFirstnameRequired("dispBlock") : setFirstnameRequired("dispNone");
+  lastname === "" ? setLastnameRequired("dispBlock") : setLastnameRequired("dispNone")
+  registerpassword === "" ? setRegisterPasswordRequired("dispBlock"): setRegisterPasswordRequired("dispNone")
+  email === "" ? setEmailRequired("dispBlock") : setEmailRequired("dispNone")
+  contact === "" ? setContactRequired("dispBlock") : setContactRequired("dispNone")
+
+
+  const params = {
+    email_address: email,
+    first_name: firstname,
+    last_name: lastname,
+    mobile_number: contact,
+    password: registerpassword
+}
+
+try {
+    const rawResponse = await fetch('http://localhost:8085/api/v1/signup', {
+        body: JSON.stringify(params),
+        method: 'POST',
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json;charset=UTF-8"
+        }
+    });
+
+    const result = await rawResponse.json();
+
+    if(rawResponse.ok) {
+        //window.location.href = './login.html';
+        setRegistrationSucess(true);
+
+    } else {
+      setRegistrationSucess(false);  
+      const error = new Error();
+        error.message = result.message || 'Something went wrong.';
+        throw error;
+
+    }
+} catch(e) {
+    alert(`Error: ${e.message}`);
+}
+
 }
 
 
@@ -198,14 +295,14 @@ const result = await rawResponse.json();
                       <FormControl required>
                           <InputLabel htmlFor="username">Username</InputLabel>
                           <Input id="username" type="text" value={username} onChange={inputUsernameChangeHandler} />
-                          <FormHelperText className="">
+                          <FormHelperText className={usernameRequire}>
                               <span className="red">required</span>
                           </FormHelperText>
                       </FormControl><br/><br/>
                       <FormControl required>
                           <InputLabel htmlFor="password">Password</InputLabel>
                           <Input id="password" type="password" value={password} onChange={inputPasswordChangeHandler} />
-                          <FormHelperText className="">
+                          <FormHelperText className={passwordRequire}>
                               <span className="red">required</span>
                           </FormHelperText>
                       </FormControl>
@@ -222,30 +319,59 @@ const result = await rawResponse.json();
               </form>
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
-        Register
-        <form className={classes.loginStyle} noValidate autoComplete="off">
-    <div>
-      <TextField required id="standard-required" label="First Name"  />
-      <TextField required id="standard-required" label="Last Name" />
-      <TextField required type="email" id="standard-required" label="Email" />
-      
-      <TextField required
-        id="standard-password-input"
-        label="Password"
-        type="password"
         
-      />
-    <TextField required type="number" id="standard-required" label="Contact No." />
-    <br/> <br/>
-    <Button
-      variant="contained"
-      type="button"
-      color="primary"
-      onClick=""
-    >Register </Button>
-    </div>
- </form>
-      </TabPanel>
+
+        <FormControl required>
+                                <InputLabel htmlFor="firstname">First Name</InputLabel>
+                                <Input id="firstname" type="text" firstname={firstname} onChange={inputFirstNameChangeHandler} />
+                                <FormHelperText className={firstnameRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
+                            </FormControl>
+                            <br /><br />
+                            <FormControl required>
+                                <InputLabel htmlFor="lastname">Last Name</InputLabel>
+                                <Input id="lastname" type="text" lastname={lastname} onChange={inputLastNameChangeHandler} />
+                                <FormHelperText className={lastnameRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
+                            </FormControl>
+                            <br /><br />
+                            <FormControl required>
+                                <InputLabel htmlFor="email">Email</InputLabel>
+                                <Input id="email" type="text" email={email} onChange={inputEmailChangeHandler} />
+                                <FormHelperText className={emailRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
+                            </FormControl>
+                            <br /><br />
+                            <FormControl required>
+                                <InputLabel htmlFor="registerPassword">Password</InputLabel>
+                                <Input id="registerPassword" type="password" registerpassword={registerpassword} onChange={inputRegisterPasswordChangeHandler} />
+                                <FormHelperText className={registerPasswordRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
+                            </FormControl>
+                            <br /><br />
+                            <FormControl required>
+                                <InputLabel htmlFor="contact">Contact No.</InputLabel>
+                                <Input id="contact" type="text" contact={contact} onChange={inputContactChangeHandler} />
+                                <FormHelperText className={contactRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
+                            </FormControl>
+                            <br /><br />
+                            {registrationSuccess === true &&
+                                <FormControl>
+                                    <span className="successText">
+                                        Registration Successful. Please Login!
+                                      </span>
+                                </FormControl>
+                            }
+                            <br /><br />
+                            <Button variant="contained" color="primary" onClick={registerClickHandler}>REGISTER</Button>
+                        
+              </TabPanel>
 
          
       </div>   
@@ -272,7 +398,7 @@ const result = await rawResponse.json();
         variant="contained"
         type="button"
         color="default"
-        onClick={handleOpen}
+        onClick={logoutClickHandler}
         className="login-button"
       >
           

@@ -1,0 +1,41 @@
+.upcoming {
+    width:100%;
+    background-color: #ff9999;
+    text-align: center;
+    padding: 8px;
+    font-size:1rem;
+}
+
+.movie-poster {
+    height: 100%;
+    width: auto;
+    
+    
+}
+
+.flex-container {
+
+    display: flex;
+}
+
+.flex-container  > div {
+    margin: 16px;
+    
+}
+
+.left {
+    width: 76%;
+    padding: 20px;
+}
+
+.right {
+    padding-top: 20px;
+    width: 24%;
+}
+
+.imgListMain {
+    cursor: pointer;
+    padding:20px;
+}
+
+
