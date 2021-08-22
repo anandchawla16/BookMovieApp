@@ -16,6 +16,7 @@
 .flex-container {
 
     display: flex;
+    margin:10px;
 }
 
 .flex-container  > div {
@@ -24,8 +25,16 @@
 }
 
 .left {
-    width: 76%;
+   width: 76%;
     padding: 20px;
+}
+
+.newleft {
+    width:76%;
+}
+
+.newright {
+    width:24%;
 }
 
 .right {

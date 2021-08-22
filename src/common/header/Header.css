@@ -38,3 +38,11 @@ padding: 8px 8px 16px 32px;
     float:right;
     padding-right: 10px;
 }
+
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
+}
