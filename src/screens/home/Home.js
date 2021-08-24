@@ -289,7 +289,7 @@ function Home(props) {
     
             <div className="flex-container">
                 <div className="newleft">
-                    <ImageList cellHeight={350} cols={4} >
+                    <ImageList rowHeight={350} cols={4} >
                         {releasedmovies.map((item) => (
                             <ImageListItem key={item.id} className="imgListMain" gap={4}>
                                 <img className="movie-poster" onClick={()=>movieClickHandler(item.id)} src={item.poster_url} height="350" alt={item.title} />

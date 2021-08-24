@@ -14,3 +14,39 @@
 .middledet {
     width:60%;
 }
+
+.movie-poster {
+    height: 100%;
+    width: auto;
+    
+    
+}
+
+.artisthead {
+    border:none;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-weight: bolder;
+}
+
+.yellow {
+    color: yellow;
+    cursor: pointer;
+  }
+  
+  .black {
+    color: none;
+    cursor: pointer;
+  }
+
+  .backbutton {
+    margin-left:24px;
+    margin-top: 8px;
+    margin-bottom: 0px;
+    height:24px;
+    
+  }
+  .backbutton hover {
+      cursor: pointer;
+  }
+  
