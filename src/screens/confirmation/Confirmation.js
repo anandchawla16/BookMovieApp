@@ -100,7 +100,7 @@ const Confirmation = (props) => {
 
   return (
     <div className="Details">
-      <Header />
+      <Header  id={props.match.params.id}  />
 
       <div className="confirmation marginTop16">
         <div>

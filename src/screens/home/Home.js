@@ -108,7 +108,7 @@ function Home(props) {
                 const result =  await rawResponse.json()
             
                    setUpcomingMovies(result["movies"]);
-                     console.log(result["movies"]);
+                     //console.log(result["movies"]);
             
             }else {
                 const error = new Error();
@@ -130,7 +130,7 @@ function Home(props) {
                     const result =  await rawResponse.json()
                 
                        setReleasedMovies(result["movies"]);
-                         console.log(result["movies"]);
+                         //console.log(result["movies"]);
                 
                 }else {
                     const error = new Error();
@@ -153,7 +153,7 @@ function Home(props) {
                         const result =  await rawResponse.json()
                     
                            setGenresList(result["genres"]);
-                             console.log(result["genres"]);
+                             //console.log(result["genres"]);
                     
                     }else {
                         const error = new Error();
@@ -176,7 +176,7 @@ function Home(props) {
                             const result =  await rawResponse.json()
                         
                                setArtistList(result["artists"]);
-                                 console.log(result["artists"]);
+                                 //console.log(result["artists"]);
                         
                         }else {
                             const error = new Error();
@@ -197,7 +197,7 @@ function Home(props) {
     
     const movieNameChangeHandler = (e) => {
         setMovieName(e.target.value)
-        console.log(moviename)
+        //console.log(moviename)
     }
 
     const genreSelectHandler = (e) => {
@@ -267,7 +267,7 @@ function Home(props) {
 
     return (
         <div>
-            <Header />
+            <Header  baseUrl = {props.baseUrl} />
             <div className="upcoming">Upcoming Titles </div>
             <div className={classes.root}>
       <ImageList className={classes.imageList} cols={6}>

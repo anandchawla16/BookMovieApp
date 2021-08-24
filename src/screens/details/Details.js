@@ -7,8 +7,6 @@ import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { Icon } from '@material-ui/core'
-import Button from "@material-ui/core/Button";
 import { Link } from 'react-router-dom';
 
 
@@ -50,6 +48,7 @@ function Details(props) {
     const [moviedetails,setMovieDetails] = useState("");
     const [youtubecode,setYoutubeCode] = useState("");
     const [artists,setArtists] = useState([])
+    const [genresdisp,setGenresDisp] = useState([])
     const [starIcons,setstarIcons] =  useState([{
         id: 1,
         stateId: "star1",
@@ -85,7 +84,7 @@ function Details(props) {
     
         console.log("before try")
         try {
-            const rawResponse =  await fetch(props.baseUrl + "movies/" + props.match.params.id,{
+            const rawResponse =  await fetch(props.baseUrl + "/movies/" + props.match.params.id,{
                 method:'GET',               
             })
 
@@ -95,6 +94,7 @@ function Details(props) {
                    setMovieDetails(result);
                    setYoutubeCode(embedCode(result.trailer_url))
                    setArtists(result.artists)
+                   setGenresDisp(result.genres)
                      console.log("I am here" + moviedetails);
                      
             }else {
@@ -146,20 +146,20 @@ function Details(props) {
         
     }
     
-    
-
-    return (
-           <div> <Header />
+        return (
+           <div> <Header showBookShowButton = "true" id={props.match.params.id} baseUrl={props.baseUrl}/>
            <div className="flex-container">
            <div className="leftdet">
-               <div className="backbutton"><Typography><Link to="/">Back to Home</Link></Typography></div>
+           <div className="backbutton"><Link to="/"><Typography>&#60; Back to Home</Typography></Link></div>
                <div><img src={moviedetails.poster_url} alt={moviedetails.title}/></div>
                </div>
            <div className="middledet">
                
                <div><Typography variant="h5" component="h2">{moviedetails.title}</Typography></div>
                
-           <div><Typography><span className="bold">Genre:</span> {moviedetails.genres}</Typography></div>
+           <div><Typography><span className="bold">Genre: </span>{ genresdisp.map(item => (
+               item + ","
+           ))}  &nbsp;</Typography></div>
            <div><Typography><span className="bold">Duration:</span> {moviedetails.duration}</Typography></div>
            <div><Typography><span className="bold">Release Date: </span>
            {new Date(moviedetails.release_date).toDateString()} </Typography></div>

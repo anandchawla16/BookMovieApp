@@ -13,8 +13,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-
+import {Link} from 'react-router-dom'
 import './Header.css';
+
+
 
 
 function getModalStyle() {
@@ -85,12 +87,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Header() {
+export default function Header(props) {
   const classes = useStyles();
   
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
-  const [loggedin, setLoggedin] = React.useState(false);
+  const [loggedin, setLoggedin] = React.useState(sessionStorage.getItem("access-token") == null ? false : true);
 
   //classes state for Login
   const [usernameRequire,setUsersnameRequire] = React.useState("dispNone")
@@ -100,7 +102,7 @@ export default function Header() {
   const[username,setUsername] = React.useState("");
   const[password,setPassword] = React.useState("");
   const[invalidlogin,setInvalidLogin] = React.useState("");
-
+  
   //states of Registration
  const[firstname,setFirstName] = React.useState("")
  const[lastname,setLastName] = React.useState("")
@@ -173,7 +175,7 @@ const inputContactChangeHandler = (e) => {
 }
 
 const loginClickHandler = async() => {
-    console.log(window.btoa(username + ":" + password))
+    //console.log(window.btoa(username + ":" + password))
     username === "" ? setUsersnameRequire("dispBlock") : setUsersnameRequire("dispNone");
     password === "" ? setPasswordRequire("dispBlock") : setPasswordRequire("dispNone")
     
@@ -188,7 +190,7 @@ const requestOptions = {
 
 try {
 
-const rawResponse = await fetch('http://localhost:8085/api/v1/auth/login', requestOptions)
+const rawResponse = await fetch(props.baseUrl + 'auth/login', requestOptions)
 //console.log(window.btoa({username:password}))
 
 const result = await rawResponse.json();
@@ -220,6 +222,7 @@ const logoutClickHandler = () => {
         sessionStorage.removeItem("access-token");
 
         setLoggedin(false);
+        
 }
 
 const registerClickHandler =async () => {
@@ -241,7 +244,7 @@ const registerClickHandler =async () => {
 }
 
 try {
-    const rawResponse = await fetch('http://localhost:8085/api/v1/signup', {
+    const rawResponse = await fetch(props.baseUrl + '/signup', {
         body: JSON.stringify(params),
         method: 'POST',
         headers: {
@@ -309,7 +312,7 @@ try {
                      <br/> <div className="invalidlogin">{invalidlogin}</div>
     
                       <br />
-                      <Button
+                          <Button
                           variant="contained"
                           type="button"
                           color="primary"
@@ -383,7 +386,11 @@ try {
     <div>
      <header className="app-header">
                     <img src={logo} className="app-logo" alt="Movies App Logo" />   
+                    
      {!loggedin ?
+      
+      
+
       <Button
         variant="contained"
         type="button"
@@ -394,6 +401,7 @@ try {
           
         Login
       </Button> :
+      <Link to="/">
       <Button
         variant="contained"
         type="button"
@@ -403,8 +411,34 @@ try {
       >
           
         Logout
-      </Button> }
+      </Button></Link> }
+      {!loggedin ?
+      
+      <Link to="/"><div className="book-button"> <Button
+        variant="contained"
+        type="button"
+        color="primary"
+        onClick={handleOpen}
+        className="book-button"
+      >Book Show</Button></div></Link>
+     : 
+     ""
+}
 
+
+
+      {loggedin && props.showBookShowButton === "true"?
+      <Link to={ "/bookshow/" + props.id}>
+      <div className="book-button"> <Button
+        variant="contained"
+        type="button"
+        color="primary"
+        
+        className="book-button"
+      >Book Show</Button></div></Link>
+     : 
+     ""
+}
       <Modal open={open} onClose={handleClose} style={modalStyle}>
         {body}
       </Modal>
