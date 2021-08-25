@@ -92,6 +92,7 @@ export default function Header(props) {
 
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+
   const [loggedin, setLoggedin] = React.useState(sessionStorage.getItem("access-token") == null ? false : true);
 
   //classes state for Login
@@ -119,12 +120,12 @@ export default function Header(props) {
 
   const [registrationSuccess, setRegistrationSucess] = React.useState(false);
 
-  //Function for Opening Modal
+  //handler to open modal
   const handleOpen = () => {
     setOpen(true);
   };
 
-  //Function for Closing Modal
+  //handler to close modal
   const handleClose = () => {
     setOpen(false);
   };

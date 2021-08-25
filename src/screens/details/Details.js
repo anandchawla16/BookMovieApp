@@ -127,9 +127,7 @@ function Details(props) {
     const opts = {
         height: '300',
         width: '700',
-        playerVars: {
-            autoplay: 0
-        }
+        
     }
 
 
@@ -193,6 +191,7 @@ function Details(props) {
                         videoId={trailer_url}
                         opts={opts}
                         ready={_onReady}
+                        
                        
                     /> 
                 </div>
