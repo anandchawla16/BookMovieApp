@@ -8,11 +8,8 @@
 
 .movie-poster {
     height: 100%;
-    width: auto;
-    
-    
+    width: auto;    
 }
-
 .flex-container {
 
     display: flex;
@@ -44,7 +41,7 @@
 
 .imgListMain {
     cursor: pointer;
-    padding:20px;
+    padding:120px;
 }
 
 
