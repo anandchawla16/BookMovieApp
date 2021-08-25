@@ -17,8 +17,8 @@
 
 .movie-poster {
     height: 100%;
-    width: auto;
-    
+    width: 100%;
+
     
 }
 
@@ -26,8 +26,13 @@
     border:none;
     margin-top: 16px;
     margin-bottom: 16px;
-    font-weight: bolder;
+    font-weight: bold;
 }
+
+.plottrailer {
+  margin-top: 16px;
+}
+
 
 .yellow {
     color: yellow;
@@ -44,10 +49,7 @@
     margin-top: 8px;
     margin-bottom: 0px;
     height:24px;
-    display: block;
-    
-      
-       
+    display: block;       
   }
   
   /* .backbutton:before {
